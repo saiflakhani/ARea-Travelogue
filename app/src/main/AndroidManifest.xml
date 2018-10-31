@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.droidbots.augmentedARea"
+    android:versionCode="1"
+    android:versionName="1.0">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/appicon"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
+        <meta-data android:name="OnlineMaps.Key" android:value="T1DE0LUmerp8oUAA1Dqs07W5gcK5ZeKv" />
+
+        <meta-data android:name="OnlineSearch.Key" android:value="T1DE0LUmerp8oUAA1Dqs07W5gcK5ZeKv" />
+
+        <meta-data android:name="OnlineRouting.Key" android:value="T1DE0LUmerp8oUAA1Dqs07W5gcK5ZeKv" />
+
+        <activity
+            android:name=".CameraViewActivity"
+            android:label="@string/title_activity_camera_view">
+
+        </activity>
+        <activity android:name=".Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".MainActivity"></activity>
+    </application>
+
+</manifest>

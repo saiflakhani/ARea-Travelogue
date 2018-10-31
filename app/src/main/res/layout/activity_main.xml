@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".MainActivity">
+
+
+
+
+
+
+    <fragment
+        android:id="@+id/map_fragment"
+        android:name="com.tomtom.online.sdk.map.MapFragment"
+        android:layout_below="@id/eTSearch"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <EditText
+        android:id="@+id/eTSearch"
+        android:layout_width="262dp"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/btnGo"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/imageView2"
+        android:layout_marginEnd="99dp"
+        android:layout_marginStart="11dp"
+        android:ems="10"
+        android:hint="Search..."
+        android:inputType="textPersonName" />
+
+    <Switch
+        android:id="@+id/ARSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/eTSearch"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="13dp"
+        android:text="AR Mode" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        app:srcCompat="@drawable/appicon" />
+
+    <Button
+        android:id="@+id/btnGo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/map_fragment"
+        android:layout_alignStart="@id/ARSwitch"
+        android:layout_alignEnd="@id/ARSwitch"
+        android:text="Go" />
+
+</RelativeLayout>
