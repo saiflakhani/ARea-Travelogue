@@ -1,6 +1,8 @@
 # ARea Travelogue: A guide for nearby points of interest.
 
 This application applies Augmented Reality (AR) to help users explore areas they are unfamiliar with. It provides additional visual aids about points of interests around users thus giving them more awareness about their surroundings.
+
+## Screenshots 
 ![alt text](https://imgur.com/a/91Wul2g)
 ![alt text](https://imgur.com/a/8UBTC5g)
 
