@@ -9,6 +9,6 @@ https://imgur.com/a/8UBTC5g
 
 You can see this project running on a video: https://drive.google.com/file/d/1VE5Xw2DgVzIXxjlO-P1j1nWSK_dF4s8b/view?usp=drivesdk
 
-This example was tested on OnePlus 5 and OnePlus 3. There is possibility that on different devices, the sensors need to be implemented in different way.
+This example was tested on OnePlus 5, OnePlus 3 and Redmi Note 3. There is possibility that on different devices, the sensors need to be implemented in different way.
 
 TomTom Online Maps, Search and Nearby APIs have been used.
