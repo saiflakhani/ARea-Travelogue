@@ -1,9 +1,9 @@
-package com.droidbots.augmentedARea.response;
+package com.droidbots.areatravelogue.response;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Position_ {
+public class Position {
 
 @SerializedName("lat")
 @Expose

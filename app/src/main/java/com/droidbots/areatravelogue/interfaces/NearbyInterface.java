@@ -1,6 +1,6 @@
-package com.droidbots.augmentedARea.interfaces;
+package com.droidbots.areatravelogue.interfaces;
 
-import com.droidbots.augmentedARea.response.NearbyResponse;
+import com.droidbots.areatravelogue.response.NearbyResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

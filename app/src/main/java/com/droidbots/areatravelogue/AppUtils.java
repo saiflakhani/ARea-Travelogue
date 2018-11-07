@@ -1,4 +1,4 @@
-package com.droidbots.augmentedARea;
+package com.droidbots.areatravelogue;
 
 public class AppUtils {
 

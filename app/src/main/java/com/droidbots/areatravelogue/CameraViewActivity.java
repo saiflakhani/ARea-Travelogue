@@ -1,12 +1,12 @@
-package com.droidbots.augmentedARea;
+package com.droidbots.areatravelogue;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -14,21 +14,15 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.droidbots.augmentedARea.interfaces.NearbyInterface;
-import com.droidbots.augmentedARea.response.NearbyResponse;
+import com.tomtom.online.sdk.location.LocationUpdateListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class CameraViewActivity extends Activity implements
-		SurfaceHolder.Callback, OnLocationChangedListener, OnAzimuthChangedListener {
+		SurfaceHolder.Callback, OnAzimuthChangedListener {
 
 	private Camera mCamera;
 	private SurfaceHolder mSurfaceHolder;
@@ -39,11 +33,10 @@ public class CameraViewActivity extends Activity implements
 	private double mAzimuthTeoretical = 0;
 	private static double AZIMUTH_ACCURACY = 15;
 	public static ArrayList<AugmentedPOI> poiList = new ArrayList<>();
-	private double mMyLatitude = 0;
-	private double mMyLongitude = 0;
+	private double mMyLatitude;
+	private double mMyLongitude;
 
 	private MyCurrentAzimuth myCurrentAzimuth;
-	private MyCurrentLocation myCurrentLocation;
 	List<AugmentedPOI> bucketListCenter = new ArrayList<>();
 	List<AugmentedPOI> bucketListLeft = new ArrayList<>();
 	List<AugmentedPOI> bucketListRight = new ArrayList<>();
@@ -61,6 +54,10 @@ public class CameraViewActivity extends Activity implements
 
 		setupListeners();
 		setupLayout();
+
+
+		mMyLatitude = MainActivity.lat;
+		mMyLongitude = MainActivity.longi;
 
 		btnCenter = (Button)findViewById(R.id.btnCenter);
 		btnLeft = (Button)findViewById(R.id.btnLeft);
@@ -148,12 +145,12 @@ public class CameraViewActivity extends Activity implements
 				+ mMyLatitude + " longitude " + mMyLongitude);
 	}
 
-	@Override
+	/*@Override
 	public void onLocationChanged(Location location) {
 
 		mMyLatitude = location.getLatitude();
 		mMyLongitude = location.getLongitude();
-	}
+	}*/
 
 
 
@@ -238,7 +235,7 @@ public class CameraViewActivity extends Activity implements
 	@Override
 	protected void onStop() {
 		myCurrentAzimuth.stop();
-		myCurrentLocation.stop();
+		//myCurrentLocation.stop();
 		super.onStop();
 	}
 
@@ -246,13 +243,19 @@ public class CameraViewActivity extends Activity implements
 	protected void onResume() {
 		super.onResume();
 		myCurrentAzimuth.start();
-		myCurrentLocation.start();
+		//myCurrentLocation.start();
 	}
 
 	private void setupListeners() {
-		myCurrentLocation = new MyCurrentLocation(this);
-		myCurrentLocation.buildGoogleApiClient(this);
-		myCurrentLocation.start();
+		MainActivity.tomtomMap.addLocationUpdateListener(new LocationUpdateListener() {
+			@Override
+			public void onLocationChanged(Location location) {
+
+				mMyLatitude = location.getLatitude();
+				mMyLongitude = location.getLongitude();
+				Log.d("LOCATION CHANGED",String.valueOf(location.getLatitude())+", "+String.valueOf(location.getLongitude()));
+			}
+		});
 
 		myCurrentAzimuth = new MyCurrentAzimuth(this, this);
 		myCurrentAzimuth.start();

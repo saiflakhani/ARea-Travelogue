@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.droidbots.augmentedARea"
+    package="com.droidbots.areatravelogue"
     android:versionCode="1"
     android:versionName="1.0">
 
@@ -22,18 +22,18 @@
         <meta-data android:name="OnlineRouting.Key" android:value="T1DE0LUmerp8oUAA1Dqs07W5gcK5ZeKv" />
 
         <activity
-            android:name=".CameraViewActivity"
+            android:name="com.droidbots.areatravelogue.CameraViewActivity"
             android:label="@string/title_activity_camera_view">
 
         </activity>
-        <activity android:name=".Splash">
+        <activity android:name="com.droidbots.areatravelogue.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name="com.droidbots.areatravelogue.MainActivity"></activity>
     </application>
 
 </manifest>

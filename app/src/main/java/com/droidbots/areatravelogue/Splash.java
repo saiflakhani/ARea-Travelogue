@@ -1,11 +1,9 @@
-package com.droidbots.augmentedARea;
+package com.droidbots.areatravelogue;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.Toast;
 
 
 public class Splash extends Activity {
