@@ -140,15 +140,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         @Override
                         public void onResponse(Call<NearbyResponse> call, Response<NearbyResponse> response) {
                             CameraViewActivity.poiList.clear();
-                            String toast = "";
                             NearbyResponse t = response.body();
                             for (int i = 0; i < t.getResults().size(); i++) {
-                                //toast = t.getResults().get(i).getPoi().getName() + "\n" + toast;
                                 CameraViewActivity.poiList.add(new AugmentedPOI(t.getResults().get(i).getPoi().getName(), t.getResults().get(i).getPoi().getCategories().get(0), t.getResults().get(i).getPosition().getLat(), t.getResults().get(i).getPosition().getLon()));
                                 Log.d("LAT : " + i, " " + t.getResults().get(i).getPosition().getLat());
                                 Log.d("LON : " + i, " " + t.getResults().get(i).getPosition().getLon());
                             }
-                            //Toast.makeText(MainActivity.this, toast, Toast.LENGTH_SHORT).show();
                             setBalloons();
                             initSearchAPI();
                         }

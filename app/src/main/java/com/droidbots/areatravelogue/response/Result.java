@@ -15,7 +15,7 @@ private String type;
 private String id;
 @SerializedName("score")
 @Expose
-private Integer score;
+private Double score;
 @SerializedName("dist")
 @Expose
 private Double dist;
@@ -54,11 +54,11 @@ public void setId(String id) {
 this.id = id;
 }
 
-public Integer getScore() {
+public Double getScore() {
 return score;
 }
 
-public void setScore(Integer score) {
+public void setScore(Double score) {
 this.score = score;
 }
 
