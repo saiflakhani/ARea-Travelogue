@@ -45,7 +45,6 @@ public class CameraViewActivity extends Activity implements
 	TextView descriptionTextView, tVLeft, tVCenter, tVRight, tVToLeft,tVToRight;
 	Button btnCenter, btnLeft, btnRight;
 
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -68,6 +67,7 @@ public class CameraViewActivity extends Activity implements
 		tVLeft = (TextView) findViewById(R.id.tVLeft);
 		tVRight = (TextView) findViewById(R.id.tVRight);
 		tVCenter = (TextView) findViewById(R.id.tVCenter);
+
 
 	}
 	public double calculateTeoreticalAzimuth(AugmentedPOI mPoi) {

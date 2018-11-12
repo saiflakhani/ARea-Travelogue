@@ -13,10 +13,14 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
-
 import com.droidbots.areatravelogue.interfaces.NearbyInterface;
 import com.droidbots.areatravelogue.response.NearbyResponse;
 import com.google.common.collect.ImmutableList;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.tomtom.online.sdk.common.location.LatLng;
 import com.tomtom.online.sdk.location.LocationUpdateListener;
 import com.tomtom.online.sdk.map.Icon;
@@ -74,6 +78,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     RoutingApi routePlannerAPI;
     Icon startIcon, endIcon;
 
+    private DatabaseReference mDatabase;
+
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +89,36 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         initUIViews();
         routePlannerAPI = OnlineRoutingApi.create(this);
 
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        DatabaseReference dealsRef = mDatabase.child("store");
+        ValueEventListener dealsListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Post object and use the values to update the UI
+                for (DataSnapshot storeDataSnapshot : dataSnapshot.getChildren()) {
+                    String addr = storeDataSnapshot.child("addr").getValue(String.class);
+                    String name = storeDataSnapshot.child("name").getValue(String.class);
+                    int id = storeDataSnapshot.child("id").getValue(Integer.class);
+                    DataSnapshot dealDataSnapshot = storeDataSnapshot.child("deals");
+                    for(DataSnapshot deal : dealDataSnapshot.getChildren()) {
+                        String description = deal.child("description").getValue(String.class);
+                        String title = deal.child("title").getValue(String.class);
+                        int deal_id = deal.child("id").getValue(Integer.class);
+                        int count = deal.child("countRedeemed").getValue(Integer.class);
+                        Log.d("SABARI", "onDataChange: " + description);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w("SABARI", "loadPost:onCancelled", databaseError.toException());
+            }
+        };
+        dealsRef.addListenerForSingleValueEvent(dealsListener);
     }
 
     private void initSearchAPI() {

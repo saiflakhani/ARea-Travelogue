@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "220814099104",
+    "firebase_url": "https://area-travelogue-e860a.firebaseio.com",
+    "project_id": "area-travelogue-e860a",
+    "storage_bucket": "area-travelogue-e860a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:220814099104:android:f6bcb84f842069d9",
+        "android_client_info": {
+          "package_name": "com.droidbots.areatravelogue"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "220814099104-j864p8s1he8jmi16k2co23e28utkc4kp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD65g4PQV5n0oT5TibDoi3HCo5hBi79oVs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
