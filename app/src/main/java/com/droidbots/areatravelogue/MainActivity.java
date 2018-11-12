@@ -81,7 +81,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private DatabaseReference mDatabase;
 
     @Override
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -144,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         ImmutableList<FuzzySearchResult> hmm = fuzzySearchResponse.getResults();
                         for (int i = 0; i < hmm.size(); i++) {
                             Log.d("RESULT", hmm.get(i).toString());
-                            CameraViewActivity.poiList.add(new AugmentedPOI(hmm.get(i).getPoi().getName(), hmm.get(i).getPoi().getClassifications()[0].getNames()[0].getName(), hmm.get(i).getPosition().getLatitude(), hmm.get(i).getPosition().getLongitude()));
+                            CameraViewActivity.poiList.add(new AugmentedPOI(hmm.get(i).getPoi().getName(), hmm.get(i).getPoi().getClassifications()[0].getNames()[0].getName(), hmm.get(i).getPosition().getLatitude(), hmm.get(i).getPosition().getLongitude(), hmm.get(i).getAddress().getFreeformAddress(), hmm.get(i).getDistance()));
                         }
                         setBalloons();
                     }
@@ -178,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             CameraViewActivity.poiList.clear();
                             NearbyResponse t = response.body();
                             for (int i = 0; i < t.getResults().size(); i++) {
-                                CameraViewActivity.poiList.add(new AugmentedPOI(t.getResults().get(i).getPoi().getName(), t.getResults().get(i).getPoi().getCategories().get(0), t.getResults().get(i).getPosition().getLat(), t.getResults().get(i).getPosition().getLon()));
+                                CameraViewActivity.poiList.add(new AugmentedPOI(t.getResults().get(i).getPoi().getName(), t.getResults().get(i).getPoi().getCategories().get(0), t.getResults().get(i).getPosition().getLat(), t.getResults().get(i).getPosition().getLon(), t.getResults().get(i).getAddress().getFreeformAddress(), t.getResults().get(i).getDist()));
                                 Log.d("LAT : " + i, " " + t.getResults().get(i).getPosition().getLat());
                                 Log.d("LON : " + i, " " + t.getResults().get(i).getPosition().getLon());
                             }

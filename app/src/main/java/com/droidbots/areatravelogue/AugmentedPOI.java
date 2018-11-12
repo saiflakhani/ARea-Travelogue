@@ -1,17 +1,24 @@
 package com.droidbots.areatravelogue;
-public class AugmentedPOI {
+
+import java.io.Serializable;
+
+public class AugmentedPOI implements Serializable {
 	private int mId;
 	private String mName;
 	private String mDescription;
 	private double mLatitude;
 	private double mLongitude;
+	private String freeFormAddress;
+	private double distance;
 	
 	public AugmentedPOI(String newName, String newDescription,
-						double newLatitude, double newLongitude) {
+						double newLatitude, double newLongitude, String freeFormAddress, double distance) {
 		this.mName = newName;
         this.mDescription = newDescription;
         this.mLatitude = newLatitude;
         this.mLongitude = newLongitude;
+        this.freeFormAddress = freeFormAddress;
+        this.distance = distance;
 	}
 	
 	public int getPoiId() {
@@ -44,4 +51,16 @@ public class AugmentedPOI {
 	public void setPoiLongitude(double poiLongitude) {
 		this.mLongitude = poiLongitude;
 	}
+	public String getFreeFormAddress() {
+		return freeFormAddress;
+	}
+	public void setFreeFormAddress(String freeFormAddress) {
+		this.freeFormAddress = freeFormAddress;
+	}
+    public double getDistance() {
+        return distance;
+    }
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
 }

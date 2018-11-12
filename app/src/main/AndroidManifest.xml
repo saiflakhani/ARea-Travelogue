@@ -29,11 +29,13 @@
         <activity android:name="com.droidbots.areatravelogue.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.droidbots.areatravelogue.MainActivity"></activity>
+        <activity android:name="com.droidbots.areatravelogue.MainActivity" />
+        <activity android:name="com.droidbots.areatravelogue.PopUpActivity"
+            android:theme="@android:style/Theme.Translucent" />
     </application>
 
 </manifest>

@@ -1,6 +1,7 @@
 package com.droidbots.areatravelogue;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
@@ -18,11 +19,12 @@ import android.widget.TextView;
 import com.tomtom.online.sdk.location.LocationUpdateListener;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CameraViewActivity extends Activity implements
-		SurfaceHolder.Callback, OnAzimuthChangedListener {
+		SurfaceHolder.Callback, OnAzimuthChangedListener , View.OnClickListener{
 
 	private Camera mCamera;
 	private SurfaceHolder mSurfaceHolder;
@@ -59,8 +61,11 @@ public class CameraViewActivity extends Activity implements
 		mMyLongitude = MainActivity.longi;
 
 		btnCenter = (Button)findViewById(R.id.btnCenter);
+		btnCenter.setOnClickListener(this);
 		btnLeft = (Button)findViewById(R.id.btnLeft);
+		btnLeft.setOnClickListener(this);
 		btnRight = (Button)findViewById(R.id.btnRight);
+		btnRight.setOnClickListener(this);
 
 		tVToLeft = (TextView) findViewById(R.id.tVToLeft);
 		tVToRight = (TextView) findViewById(R.id.tVToRight);
@@ -320,4 +325,19 @@ public class CameraViewActivity extends Activity implements
 	}
 
 
+	@Override
+	public void onClick(View view) {
+        Intent intent = new Intent(CameraViewActivity.this, PopUpActivity.class);
+        switch(view.getId()) {
+			case R.id.btnCenter: intent.putExtra("List", (Serializable) bucketListCenter);
+				startActivity(intent);
+				break;
+			case R.id.btnLeft: intent.putExtra("List", (Serializable) bucketListLeft);
+				startActivity(intent);
+				break;
+			case R.id.btnRight: intent.putExtra("List", (Serializable) bucketListRight);
+				startActivity(intent);
+				break;
+		}
+	}
 }
