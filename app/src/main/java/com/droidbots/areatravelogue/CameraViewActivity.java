@@ -15,6 +15,7 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.droidbots.areatravelogue.deals.Store;
 import com.tomtom.online.sdk.location.LocationUpdateListener;
 
 import java.io.IOException;
@@ -33,6 +34,7 @@ public class CameraViewActivity extends Activity implements
 	private double mAzimuthTeoretical = 0;
 	private static double AZIMUTH_ACCURACY = 15;
 	public static ArrayList<AugmentedPOI> poiList = new ArrayList<>();
+	public static List<Store> storeList = new ArrayList<>();
 	private double mMyLatitude;
 	private double mMyLongitude;
 

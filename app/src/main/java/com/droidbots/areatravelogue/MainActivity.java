@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 
 import com.droidbots.areatravelogue.deals.Deal;
+import com.droidbots.areatravelogue.deals.Review;
 import com.droidbots.areatravelogue.deals.Store;
 import com.droidbots.areatravelogue.interfaces.NearbyInterface;
 import com.droidbots.areatravelogue.response.NearbyResponse;
@@ -88,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     RoutingApi routePlannerAPI;
     Icon startIcon, endIcon;
     SearchApi searchApi;
-    List<Store> storeList;
     private DatabaseReference mDatabase;
     EditText eTSearch;
     String searchTerm;
@@ -103,8 +103,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         routePlannerAPI = OnlineRoutingApi.create(this);
         searchApi = OnlineSearchApi.create(MainActivity.this);
         eTSearch = findViewById(R.id.eTSearch);
-
-        storeList = new ArrayList<>();
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -125,14 +123,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         String title = deal.child("title").getValue(String.class);
                         int deal_id = deal.child("id").getValue(Integer.class);
                         int count = deal.child("countRedeemed").getValue(Integer.class);
-                        Log.d("SABARI", "onDataChange: " + description);
                         Deal tempDeal = new Deal(deal_id, title, description, count);
                         dealList.add(tempDeal);
                     }
-                    Store tempStore = new Store(id, name, addr, dealList);
-                    storeList.add(tempStore);
-                }
 
+                    List<Review> reviewList = new ArrayList<>();
+                    DataSnapshot reviewDataSnapshot = storeDataSnapshot.child("reviews");
+                    for(DataSnapshot review : reviewDataSnapshot.getChildren()) {
+                        int review_id = review.child("id").getValue(Integer.class);
+                        int rating = review.child("rating").getValue(Integer.class);
+                        String title = review.child("title").getValue(String.class);
+                        String body = review.child("body").getValue(String.class);
+                        String username = review.child("username").getValue(String.class);
+                        Review tempReview = new Review(review_id, rating, title, body, username);
+                        reviewList.add(tempReview);
+                    }
+
+                    Store tempStore = new Store(id, name, addr, dealList, reviewList);
+                    CameraViewActivity.storeList.add(tempStore);
+                }
+                Log.d("SABARI", CameraViewActivity.storeList.get(0).getReviews().get(0).getBody());
+                Log.d("SABARI", CameraViewActivity.storeList.get(0).getDeals().get(0).getDescription());
             }
 
             @Override
