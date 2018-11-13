@@ -13,6 +13,9 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
+
+import com.droidbots.areatravelogue.deals.Deal;
+import com.droidbots.areatravelogue.deals.Store;
 import com.droidbots.areatravelogue.interfaces.NearbyInterface;
 import com.droidbots.areatravelogue.response.NearbyResponse;
 import com.google.common.collect.ImmutableList;
@@ -77,16 +80,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     List<LatLng> routeCordList = new ArrayList<>();
     RoutingApi routePlannerAPI;
     Icon startIcon, endIcon;
-
+    List<Store> storeList;
     private DatabaseReference mDatabase;
 
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initTomTomServices();
         initUIViews();
         routePlannerAPI = OnlineRoutingApi.create(this);
+
+        storeList = new ArrayList<>();
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -99,6 +105,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     String addr = storeDataSnapshot.child("addr").getValue(String.class);
                     String name = storeDataSnapshot.child("name").getValue(String.class);
                     int id = storeDataSnapshot.child("id").getValue(Integer.class);
+
+                    List<Deal> dealList = new ArrayList<>();
                     DataSnapshot dealDataSnapshot = storeDataSnapshot.child("deals");
                     for(DataSnapshot deal : dealDataSnapshot.getChildren()) {
                         String description = deal.child("description").getValue(String.class);
@@ -106,7 +114,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         int deal_id = deal.child("id").getValue(Integer.class);
                         int count = deal.child("countRedeemed").getValue(Integer.class);
                         Log.d("SABARI", "onDataChange: " + description);
+                        Deal tempDeal = new Deal(deal_id, title, description, count);
+                        dealList.add(tempDeal);
                     }
+                    Store tempStore = new Store(id, name, addr, dealList);
+                    storeList.add(tempStore);
                 }
 
             }
@@ -143,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         ImmutableList<FuzzySearchResult> hmm = fuzzySearchResponse.getResults();
                         for (int i = 0; i < hmm.size(); i++) {
                             Log.d("RESULT", hmm.get(i).toString());
-                            CameraViewActivity.poiList.add(new AugmentedPOI(hmm.get(i).getPoi().getName(), hmm.get(i).getPoi().getClassifications()[0].getNames()[0].getName(), hmm.get(i).getPosition().getLatitude(), hmm.get(i).getPosition().getLongitude(), hmm.get(i).getAddress().getFreeformAddress(), hmm.get(i).getDistance()));
+                            CameraViewActivity.poiList.add(new AugmentedPOI(hmm.get(i).getPoi().getName(), hmm.get(i).getPoi().getClassifications()[0].getNames()[0].getName(), hmm.get(i).getPosition().getLatitude(), hmm.get(i).getPosition().getLongitude()));
                         }
                         setBalloons();
                     }
@@ -177,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             CameraViewActivity.poiList.clear();
                             NearbyResponse t = response.body();
                             for (int i = 0; i < t.getResults().size(); i++) {
-                                CameraViewActivity.poiList.add(new AugmentedPOI(t.getResults().get(i).getPoi().getName(), t.getResults().get(i).getPoi().getCategories().get(0), t.getResults().get(i).getPosition().getLat(), t.getResults().get(i).getPosition().getLon(), t.getResults().get(i).getAddress().getFreeformAddress(), t.getResults().get(i).getDist()));
+                                CameraViewActivity.poiList.add(new AugmentedPOI(t.getResults().get(i).getPoi().getName(), t.getResults().get(i).getPoi().getCategories().get(0), t.getResults().get(i).getPosition().getLat(), t.getResults().get(i).getPosition().getLon()));
                                 Log.d("LAT : " + i, " " + t.getResults().get(i).getPosition().getLat());
                                 Log.d("LON : " + i, " " + t.getResults().get(i).getPosition().getLon());
                             }
