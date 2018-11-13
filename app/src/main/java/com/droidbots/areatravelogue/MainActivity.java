@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.media.MediaBrowserCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -47,11 +48,17 @@ import com.tomtom.online.sdk.routing.data.TravelMode;
 import com.tomtom.online.sdk.search.OnlineSearchApi;
 import com.tomtom.online.sdk.search.SearchApi;
 import com.tomtom.online.sdk.search.api.SearchError;
+import com.tomtom.online.sdk.search.api.alongroute.AlongRouteSearchResultListener;
 import com.tomtom.online.sdk.search.api.fuzzy.FuzzySearchResultListener;
+import com.tomtom.online.sdk.search.data.alongroute.AlongRouteSearchQueryBuilder;
+import com.tomtom.online.sdk.search.data.alongroute.AlongRouteSearchResponse;
+import com.tomtom.online.sdk.search.data.alongroute.AlongRouteSearchResult;
 import com.tomtom.online.sdk.search.data.fuzzy.FuzzySearchQuery;
 import com.tomtom.online.sdk.search.data.fuzzy.FuzzySearchQueryBuilder;
 import com.tomtom.online.sdk.search.data.fuzzy.FuzzySearchResponse;
 import com.tomtom.online.sdk.search.data.fuzzy.FuzzySearchResult;
+import com.tomtom.online.sdk.search.extensions.SearchService;
+import com.tomtom.online.sdk.search.extensions.SearchServiceConnectionCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,8 +84,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     List<LatLng> routeCordList = new ArrayList<>();
     RoutingApi routePlannerAPI;
     Icon startIcon, endIcon;
-
+    SearchApi searchApi;
     private DatabaseReference mDatabase;
+    EditText eTSearch;
+    String searchTerm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +96,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         initTomTomServices();
         initUIViews();
         routePlannerAPI = OnlineRoutingApi.create(this);
+        searchApi = OnlineSearchApi.create(MainActivity.this);
+        eTSearch = findViewById(R.id.eTSearch);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -121,8 +132,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void initSearchAPI() {
-        final SearchApi searchApi = OnlineSearchApi.create(MainActivity.this);
-        final EditText eTSearch = findViewById(R.id.eTSearch);
+
+
 
         Button btnSearchGo = findViewById(R.id.btnGo);
         btnSearchGo.setOnClickListener(new View.OnClickListener() {
@@ -286,15 +297,25 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             this.tomtomMap.clear();
             tomtomMap.setMyLocationEnabled(true);
 
+
         }
 
         if (!startSet && !endSet) {
             startSet = true;
             startCord = latLng;
+            tomtomMap.clear();
+            tomtomMap.setMyLocationEnabled(true);
+
+            MarkerBuilder startermarkerBuilder = new MarkerBuilder(latLng)
+                    .icon(Icon.Factory.fromResources(MainActivity.this, R.drawable.start_icon));
+            tomtomMap.addMarker(startermarkerBuilder);
             routeCordList.add(latLng);
         } else if (startSet && !endSet) {
             endSet = true;
             endCord = latLng;
+            MarkerBuilder markerBuilder = new MarkerBuilder(latLng)
+                    .icon(Icon.Factory.fromResources(MainActivity.this, R.drawable.end_icon));
+            tomtomMap.addMarker(markerBuilder);
             routeCordList.add(latLng);
 
 
@@ -312,21 +333,73 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     .subscribe(new DisposableSingleObserver<RouteResponse>() {
                         @Override
                         public void onSuccess(RouteResponse routeResult) {
+
                             displayRoutes(routeResult.getRoutes());
+
+                            tomtomMap.setMyLocationEnabled(true);
                             tomtomMap.displayRoutesOverview();
+
+
+
+
+                           searchAlongRoute();
                         }
 
                         @Override
                         public void onError(Throwable e) {
                         }
                     });
+
         }
     }
+
+    private void searchAlongRoute() {
+
+        searchTerm = "PETROL_STATION";
+
+        if(!eTSearch.getText().toString().equals("")) {
+            searchTerm = eTSearch.getText().toString();
+
+        }else{
+            eTSearch.setText(searchTerm);
+        }
+
+
+            AlongRouteSearchQueryBuilder builder = new AlongRouteSearchQueryBuilder(searchTerm, routeCordList, 100);
+            builder.withLimit(100);
+
+            SearchApi searchAPI = OnlineSearchApi.create(MainActivity.this);
+            searchAPI.alongRouteSearch(builder.build(), new AlongRouteSearchResultListener() {
+                @Override
+                public void onSearchResult(AlongRouteSearchResponse alongRouteSearchResponse) {
+                    Log.d("Search", "Success");
+                    //tomtomMap.clear();
+                    tomtomMap.setMyLocationEnabled(true);
+                    CameraViewActivity.poiList.clear();
+                    ImmutableList<AlongRouteSearchResult> hmm = alongRouteSearchResponse.getResults();
+                    for (int i = 0; i < hmm.size(); i++) {
+                        Log.d("RESULT", hmm.get(i).toString());
+                        CameraViewActivity.poiList.add(new AugmentedPOI(hmm.get(i).getPoi().getName(), hmm.get(i).getPoi().getClassifications()[0].getNames()[0].getName(), hmm.get(i).getPosition().getLatitude(), hmm.get(i).getPosition().getLongitude(), hmm.get(i).getAddress().getFreeformAddress(), hmm.get(i).getDistance()));
+                    }
+                    setBalloons();
+                    //tomtomMap.displayRoutesOverview();
+                    Toast.makeText(MainActivity.this, "Showing "+searchTerm+" along route", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onSearchError(SearchError searchError) {
+
+                }
+            });
+
+    }
+
 
     private void displayRoutes(List<FullRoute> routes) {
         for (FullRoute fullRoute : routes) {
             Route route = tomtomMap.addRoute(new RouteBuilder(
-                    fullRoute.getCoordinates()).startIcon(startIcon).endIcon(endIcon).isActive(true));
+                    fullRoute.getCoordinates()).isActive(true));
+
         }
     }
 
@@ -338,6 +411,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     private void initUIViews() {
+
         ARMode = (Switch) findViewById(R.id.ARSwitch);
         ARMode.setChecked(false);
         endIcon = Icon.Factory.fromResources(MainActivity.this, R.drawable.end_icon);

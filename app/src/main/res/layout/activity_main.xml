@@ -53,4 +53,14 @@
         android:layout_alignEnd="@id/ARSwitch"
         android:text="Go" />
 
+    <TextView
+        android:id="@+id/tVTip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/eTSearch"
+        android:layout_alignTop="@+id/map_fragment"
+        android:text="Tip : Long press on the map to set Start and End points"
+        android:textColor="@android:color/black"
+        android:textStyle="bold" />
+
 </RelativeLayout>
