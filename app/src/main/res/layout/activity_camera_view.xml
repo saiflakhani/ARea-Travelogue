@@ -3,6 +3,9 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <SurfaceView
         android:id="@+id/cameraview"
         android:layout_width="match_parent"
@@ -141,7 +144,7 @@
         android:src="@drawable/ic_launcher"
         android:text="" />
 
-
+    </RelativeLayout>
 
     <include layout="@layout/popup_layout" />
 

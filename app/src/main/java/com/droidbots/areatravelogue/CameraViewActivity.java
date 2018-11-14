@@ -63,19 +63,14 @@ public static List<Store> storeList = new ArrayList<>();
         LinearLayout lLSheet = findViewById(R.id.lLSheet);
         sheetBehavior = BottomSheetBehavior.from(lLSheet);
 
-        if (displayBucketList == null)
-            sheetBehavior.setPeekHeight(0);
-        else sheetBehavior.setPeekHeight(56);
+
 
         sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                ListView lVPOI;
-                lVPOI = (ListView) findViewById(R.id.lVPOI);
+
                 switch (newState) {
                     case BottomSheetBehavior.STATE_HIDDEN:
-                        poiAdapter = new POIAdapter(getApplicationContext(), (ArrayList) displayBucketList);
-                        lVPOI.setAdapter(poiAdapter);
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED:
                         break;
@@ -364,11 +359,6 @@ public static List<Store> storeList = new ArrayList<>();
 
     @Override
     public void onClick(View view) {
-        if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
-            sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        } else {
-            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        }
         switch (view.getId()) {
             case R.id.btnCenter:
                 displayBucketList = bucketListCenter;
@@ -380,6 +370,22 @@ public static List<Store> storeList = new ArrayList<>();
                 displayBucketList = bucketListRight;
                 break;
         }
+/*
+        if (displayBucketList == null)
+            sheetBehavior.setPeekHeight(0);
+        else sheetBehavior.setPeekHeight(280);*/
+
+        ListView lVPOI;
+        lVPOI = (ListView) findViewById(R.id.lVPOI);
+        poiAdapter = new POIAdapter(getApplicationContext(), (ArrayList) displayBucketList);
+        lVPOI.setAdapter(poiAdapter);
+
+        if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+            sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        } else {
+            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        }
+
     }
 
     @Override

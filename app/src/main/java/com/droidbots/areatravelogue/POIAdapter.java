@@ -34,11 +34,11 @@ public class POIAdapter extends ArrayAdapter implements View.OnClickListener {
     }
 
     @Override
-    public void onClick(View view) {
+    public void onClick(View view) {/*
         if(prevView != null)
             prevView.findViewById(R.id.lLAddress).setVisibility(View.GONE);
         view.findViewById(R.id.lLAddress).setVisibility(View.VISIBLE);
-        prevView = view;
+        prevView = view;*/
 
     }
 
