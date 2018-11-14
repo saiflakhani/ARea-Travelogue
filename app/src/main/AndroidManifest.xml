@@ -34,8 +34,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.droidbots.areatravelogue.MainActivity" />
-        <activity android:name="com.droidbots.areatravelogue.PopUpActivity"
-            android:theme="@android:style/Theme.Translucent" />
+        <activity android:name="com.droidbots.areatravelogue.PopUpActivity" />
     </application>
 
 </manifest>
