@@ -14,27 +14,31 @@
         android:icon="@drawable/appicon"
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-
-        <meta-data android:name="OnlineMaps.Key" android:value="T1DE0LUmerp8oUAA1Dqs07W5gcK5ZeKv" />
-
-        <meta-data android:name="OnlineSearch.Key" android:value="T1DE0LUmerp8oUAA1Dqs07W5gcK5ZeKv" />
-
-        <meta-data android:name="OnlineRouting.Key" android:value="T1DE0LUmerp8oUAA1Dqs07W5gcK5ZeKv" />
+        <meta-data
+            android:name="OnlineMaps.Key"
+            android:value="T1DE0LUmerp8oUAA1Dqs07W5gcK5ZeKv" />
+        <meta-data
+            android:name="OnlineSearch.Key"
+            android:value="T1DE0LUmerp8oUAA1Dqs07W5gcK5ZeKv" />
+        <meta-data
+            android:name="OnlineRouting.Key"
+            android:value="T1DE0LUmerp8oUAA1Dqs07W5gcK5ZeKv" />
 
         <activity
-            android:name="com.droidbots.areatravelogue.CameraViewActivity"
-            android:label="@string/title_activity_camera_view">
-
-        </activity>
-        <activity android:name="com.droidbots.areatravelogue.Splash">
+            android:name=".CameraViewActivity"
+            android:label="@string/title_activity_camera_view"></activity>
+        <activity android:name=".Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.droidbots.areatravelogue.MainActivity" />
-        <activity android:name="com.droidbots.areatravelogue.PopUpActivity" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".PopUpActivity" />
+        <activity android:name=".StoreDetailsActivity"
+            android:theme="@style/Theme.AppCompat.Light"/>
     </application>
 
 </manifest>

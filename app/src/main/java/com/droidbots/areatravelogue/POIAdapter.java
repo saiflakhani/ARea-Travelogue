@@ -1,6 +1,7 @@
 package com.droidbots.areatravelogue;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +46,7 @@ public class POIAdapter extends ArrayAdapter implements View.OnClickListener {
     private int lastPosition = 0;
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
 
         AugmentedPOI poi = (AugmentedPOI) getItem(position);
@@ -61,6 +62,17 @@ public class POIAdapter extends ArrayAdapter implements View.OnClickListener {
             viewHolder.tVDistance = (TextView) convertView.findViewById(R.id.tVDistance);
             viewHolder.tVAddress = (TextView) convertView.findViewById(R.id.tVAddress);
             viewHolder.cardView = (CardView) convertView.findViewById(R.id.cardView);
+            viewHolder.btnShowStore = convertView.findViewById(R.id.btnViewStore);
+
+            viewHolder.btnShowStore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(context, StoreDetailsActivity.class);
+                    i.putExtra("UniqueID", position);
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(i);
+                }
+            });
 
 
             result = convertView;

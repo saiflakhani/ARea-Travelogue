@@ -38,7 +38,7 @@ public static List<Store> storeList = new ArrayList<>();
         List<AugmentedPOI> bucketListCenter = new ArrayList<>();
     List<AugmentedPOI> bucketListLeft = new ArrayList<>();
     List<AugmentedPOI> bucketListRight = new ArrayList<>();
-    List<AugmentedPOI> displayBucketList = null;
+    public static List<AugmentedPOI> displayBucketList = null;
     TextView descriptionTextView, tVLeft, tVCenter, tVRight, tVToLeft, tVToRight;
     Button btnCenter, btnLeft, btnRight;
     BottomSheetBehavior sheetBehavior;
