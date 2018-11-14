@@ -19,7 +19,7 @@ public class Splash extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spash);
 
-        requestPermissions(permissions,permsRequestCode);
+
 
         if (ContextCompat.checkSelfPermission(Splash.this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -45,6 +45,8 @@ public class Splash extends Activity {
 
 
 
+        }else{
+            requestPermissions(permissions,permsRequestCode);
         }
 
 

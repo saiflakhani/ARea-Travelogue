@@ -104,7 +104,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         searchApi = OnlineSearchApi.create(MainActivity.this);
         eTSearch = findViewById(R.id.eTSearch);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+    }
+
+
+
+    private void initFirebase(){
 
         DatabaseReference dealsRef = mDatabase.child("store");
         ValueEventListener dealsListener = new ValueEventListener() {
@@ -244,6 +248,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             balloon.setText(CameraViewActivity.poiList.get(i).getPoiName() + "\n" + CameraViewActivity.poiList.get(i).getPoiDescription());
 
         }
+
     }
 
 
@@ -444,6 +449,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
+                    mDatabase = FirebaseDatabase.getInstance().getReference();
+                    initFirebase();
+
                     Intent i = new Intent(MainActivity.this, CameraViewActivity.class);
                     startActivity(i);
                 }
