@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -32,10 +33,13 @@ public class StoreDetailsActivity extends Activity {
         TextView storeName = findViewById(R.id.store_name);
         TextView storeAddr = findViewById(R.id.store_addr);
 
-        int id = Integer.parseInt(String.valueOf(getIntent().getExtras().get("UniqueID")));
+        //
+        // int id = getIntent().getExtras().get("UniqueID");
 
-        storeName.setText(CameraViewActivity.displayBucketList.get(id).getPoiName());
-        storeAddr.setText(CameraViewActivity.displayBucketList.get(id).getFreeFormAddress());
+        AugmentedPOI poi = (AugmentedPOI) getIntent().getSerializableExtra("UniqueID");
+
+        storeName.setText(poi.getPoiName());
+        storeAddr.setText(poi.getFreeFormAddress());
 
         List<String> dealListAsString = new ArrayList<>();
         List<String> reviewListAsString = new ArrayList<>();
@@ -47,7 +51,7 @@ public class StoreDetailsActivity extends Activity {
         }
 
         for(int i=0; i<reviewList.size(); i++) {
-            reviewListAsString.add(reviewList.get(i).getTitle() + "\n" + reviewList.get(i).getBody() + "\n- " +
+            reviewListAsString.add(Html.fromHtml("<b>" + reviewList.get(i).getTitle() + "</b>") + "\t\t" + reviewList.get(i).getRating() + "/5\n" + reviewList.get(i).getBody() + "\n- " +
                     reviewList.get(i).getUsername());
         }
 

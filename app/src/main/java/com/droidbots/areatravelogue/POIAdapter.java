@@ -21,7 +21,7 @@ public class POIAdapter extends ArrayAdapter implements View.OnClickListener {
     private ArrayList<AugmentedPOI> data;
     View prevView = null;
     Context context;
-
+    AugmentedPOI poi;
     private static class ViewHolder {
         TextView tVName, tVType, tVDistance, tVAddress;
         CardView cardView;
@@ -49,7 +49,7 @@ public class POIAdapter extends ArrayAdapter implements View.OnClickListener {
     public View getView(final int position, View convertView, ViewGroup parent) {
 
 
-        AugmentedPOI poi = (AugmentedPOI) getItem(position);
+        poi = (AugmentedPOI) getItem(position);
         ViewHolder viewHolder;
         final View result;
 
@@ -68,7 +68,7 @@ public class POIAdapter extends ArrayAdapter implements View.OnClickListener {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(context, StoreDetailsActivity.class);
-                    i.putExtra("UniqueID", position);
+                    i.putExtra("UniqueID",poi);
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(i);
                 }

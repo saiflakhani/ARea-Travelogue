@@ -51,6 +51,7 @@
         android:layout_above="@+id/map_fragment"
         android:layout_alignStart="@id/ARSwitch"
         android:layout_alignEnd="@id/ARSwitch"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:text="Go" />
 
     <TextView

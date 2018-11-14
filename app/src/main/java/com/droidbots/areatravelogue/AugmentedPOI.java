@@ -1,5 +1,8 @@
 package com.droidbots.areatravelogue;
-public class AugmentedPOI {
+
+import java.io.Serializable;
+
+public class AugmentedPOI implements Serializable {
 	private int mId;
 	private String mName;
 	private String mDescription;
