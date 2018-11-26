@@ -2,7 +2,7 @@ package com.droidbots.areatravelogue.deals;
 
 public class Guide {
     private String name;
-    private int contact, id;
+    private int contact, id, rating;
     private String lat, lng, imgUrl;
 
     public Guide() {
