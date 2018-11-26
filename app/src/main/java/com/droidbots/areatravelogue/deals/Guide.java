@@ -8,13 +8,22 @@ public class Guide {
     public Guide() {
     }
 
-    public Guide(int id, String name, String imgUrl, int contact, String lat, String lng) {
+    public Guide(int id, String name, int contact, String imgUrl, int rating, String lat, String lng) {
         this.name = name;
         this.contact = contact;
         this.id = id;
         this.lat = lat;
         this.lng = lng;
         this.imgUrl = imgUrl;
+        this.rating = rating;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 
     public String getName() {
