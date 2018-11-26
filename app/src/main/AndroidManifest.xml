@@ -26,7 +26,7 @@
 
         <activity
             android:name=".CameraViewActivity"
-            android:label="@string/title_activity_camera_view"></activity>
+            android:label="@string/title_activity_camera_view" />
         <activity android:name=".Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,8 +37,10 @@
         </activity>
         <activity android:name=".MainActivity" />
         <activity android:name=".PopUpActivity" />
-        <activity android:name=".StoreDetailsActivity"
-            android:theme="@style/Theme.AppCompat.Light"/>
+        <activity
+            android:name=".StoreDetailsActivity"
+            android:theme="@style/Theme.AppCompat.Light" />
+        <activity android:name=".FindTourGuides"></activity>
     </application>
 
 </manifest>

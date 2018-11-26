@@ -1,16 +1,25 @@
 package com.droidbots.areatravelogue;
 
+import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.NavigationView;
 import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -92,7 +101,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     SearchApi searchApi;
     private DatabaseReference mDatabase;
     EditText eTSearch;
+    private DrawerLayout mDrawerLayout;
+    private ImageButton mMenuButton;
     String searchTerm;
+    public MapFragment mapFragment;
+    NavigationView navigationView;
 
     @Override
 
@@ -100,12 +113,35 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initTomTomServices();
+        initNavBar();
         initUIViews();
         routePlannerAPI = OnlineRoutingApi.create(this);
         searchApi = OnlineSearchApi.create(MainActivity.this);
         eTSearch = findViewById(R.id.eTSearch);
 
     }
+
+    private void initNavBar() {
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigationView);
+                navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.nav_maps:
+                        //do nothing
+                        return true;
+                    case R.id.nav_book_tour_guide:
+                        Intent i = new Intent(MainActivity.this,FindTourGuides.class);
+                        startActivity(i);
+                        return true;
+                }
+                return false;
+            }
+        });
+    }
+
+
 
 
 
@@ -161,9 +197,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void initSearchAPI() {
-
-
-
         Button btnSearchGo = findViewById(R.id.btnGo);
         btnSearchGo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,7 +236,34 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onResume() {
         super.onResume();
         ARMode.setChecked(false);
+        checkIfTourBooked();
     }
+
+    private void checkIfTourBooked() {
+        if(FindTourGuides.isTourBooked){
+            tomtomMap.clear();
+            tomtomMap.setMyLocationEnabled(true);
+
+            //TODO SABARINATH GET THESE VALUES FROM FIREBASE
+
+            CameraViewActivity.assignedGuide.setName("Aditya Walke");
+            CameraViewActivity.assignedGuide.setContact(987654);
+            CameraViewActivity.assignedGuide.setRating(4);
+
+            //TODO END HERE
+
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle("Your Guide Details")
+                    .setMessage("Name : "+CameraViewActivity.assignedGuide.getName()+"\n"+"Phone : "+CameraViewActivity.assignedGuide.getContact()+"\nRating : "+CameraViewActivity.assignedGuide.getRating());
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+        }
+    }
+
+
+
 
     private void setPoints() {
         NearbyInterface nearbyInterface = RetrofitClient.getClient().create(NearbyInterface.class);
@@ -363,17 +423,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     .subscribe(new DisposableSingleObserver<RouteResponse>() {
                         @Override
                         public void onSuccess(RouteResponse routeResult) {
-
                             currentRoute = routeResult.getRoutes();
                             displayRoutes(routeResult.getRoutes());
-
                             tomtomMap.setMyLocationEnabled(true);
                             tomtomMap.displayRoutesOverview();
-
-
-
-
-                           searchAlongRoute();
+                            searchAlongRoute();
                         }
 
                         @Override

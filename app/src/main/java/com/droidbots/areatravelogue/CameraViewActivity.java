@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.droidbots.areatravelogue.deals.Guide;
 import com.droidbots.areatravelogue.deals.Store;
 import com.tomtom.online.sdk.location.LocationUpdateListener;
 import com.tomtom.online.sdk.routing.data.FullRoute;
@@ -34,6 +35,7 @@ public class CameraViewActivity extends Activity implements
 		SurfaceHolder.Callback, OnAzimuthChangedListener , View.OnClickListener {
 
     public static ArrayList<AugmentedPOI> poiList = new ArrayList<>();
+    public static Guide assignedGuide = new Guide();
     private static double AZIMUTH_ACCURACY = 15;
     private static POIAdapter poiAdapter;
     //private AugmentedPOI mPoi;
