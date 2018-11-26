@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     Switch ARMode;
     int oneinFiveCount = 0;
     public static double lat, longi;
+    public static List<FullRoute> currentRoute = null;
     public boolean startSet = false, endSet = false;
     LatLng startCord, endCord;
     List<LatLng> routeCordList = new ArrayList<>();
@@ -353,7 +354,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     .withReport(Report.EFFECTIVE_SETTINGS)
                     .withInstructionsType(InstructionsType.TEXT)
                     .withTravelMode(TravelMode.CAR)
-                    .withConsiderTraffic(false).build();
+                    .withConsiderTraffic(true).build();
 
 
             routePlannerAPI.planRoute(queryBuilder)
@@ -363,6 +364,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         @Override
                         public void onSuccess(RouteResponse routeResult) {
 
+                            currentRoute = routeResult.getRoutes();
                             displayRoutes(routeResult.getRoutes());
 
                             tomtomMap.setMyLocationEnabled(true);

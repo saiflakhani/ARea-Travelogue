@@ -8,13 +8,14 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Switch;
@@ -22,6 +23,8 @@ import android.widget.TextView;
 
 import com.droidbots.areatravelogue.deals.Store;
 import com.tomtom.online.sdk.location.LocationUpdateListener;
+import com.tomtom.online.sdk.routing.data.FullRoute;
+import com.tomtom.online.sdk.routing.data.Instruction;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,6 +53,11 @@ public static List<Store> storeList = new ArrayList<>();
     private double mMyLatitude;
     private double mMyLongitude;
     private MyCurrentAzimuth myCurrentAzimuth;
+    Instruction[] instructions = null;
+    int instructionCount = 0;
+    LinearLayout lLInstructions, lLPois;
+    ImageView iVInstruction;
+    Button btnPrevInstruction, btnNextInstruction;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,7 +70,6 @@ public static List<Store> storeList = new ArrayList<>();
 
         LinearLayout lLSheet = findViewById(R.id.lLSheet);
         sheetBehavior = BottomSheetBehavior.from(lLSheet);
-
 
 
         sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -107,6 +114,27 @@ public static List<Store> storeList = new ArrayList<>();
         tVRight = (TextView) findViewById(R.id.tVRight);
         tVCenter = (TextView) findViewById(R.id.tVCenter);
 
+        btnPrevInstruction = findViewById(R.id.getPrevInstruction);
+        btnPrevInstruction.setOnClickListener(this);
+        btnNextInstruction = findViewById(R.id.getNextInstruction);
+        btnNextInstruction.setOnClickListener(this);
+        iVInstruction = findViewById(R.id.iVInstruction);
+        lLInstructions = findViewById(R.id.lLInstruction);
+        lLPois = findViewById(R.id.lLPois);
+
+
+
+
+        if(MainActivity.currentRoute != null) {
+            List<FullRoute> route = MainActivity.currentRoute;
+            instructions = route.get(0).getGuidance().getInstructions();
+//            lLInstructions.setVisibility(View.VISIBLE);
+//            lLPois.setVisibility(View.GONE);
+        } else {
+//            lLInstructions.setVisibility(View.GONE);
+//            lLPois.setVisibility(View.VISIBLE);
+            instructions = null;
+        }
 
     }
 
@@ -142,7 +170,6 @@ public static List<Store> storeList = new ArrayList<>();
         List<Double> minMax = new ArrayList<Double>();
         double q1 = (azimuth + minAngle) / 2;
         double q3 = (azimuth + maxAngle) / 2;
-        ;
 
         if (minAngle < 0)
             minAngle += 360;
@@ -359,32 +386,64 @@ public static List<Store> storeList = new ArrayList<>();
 
     @Override
     public void onClick(View view) {
+        String maneuver = "";
+        ListView lVPOI;
         switch (view.getId()) {
             case R.id.btnCenter:
                 displayBucketList = bucketListCenter;
+                lVPOI = findViewById(R.id.lVPOI);
+                poiAdapter = new POIAdapter(getApplicationContext(), (ArrayList) displayBucketList);
+                lVPOI.setAdapter(poiAdapter);
+
+                if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                } else {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
                 break;
             case R.id.btnLeft:
                 displayBucketList = bucketListLeft;
+                lVPOI = findViewById(R.id.lVPOI);
+                poiAdapter = new POIAdapter(getApplicationContext(), (ArrayList) displayBucketList);
+                lVPOI.setAdapter(poiAdapter);
+
+                if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                } else {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
                 break;
             case R.id.btnRight:
                 displayBucketList = bucketListRight;
+                lVPOI = findViewById(R.id.lVPOI);
+                poiAdapter = new POIAdapter(getApplicationContext(), (ArrayList) displayBucketList);
+                lVPOI.setAdapter(poiAdapter);
+
+                if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                } else {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
+                break;
+            case R.id.getNextInstruction:
+                if (instructionCount < instructions.length)
+                    maneuver = instructions[instructionCount++].getManeuver();
+                break;
+            case R.id.getPrevInstruction:
+                if (instructionCount >= 1)
+                    maneuver = instructions[--instructionCount].getManeuver();
                 break;
         }
-/*
-        if (displayBucketList == null)
-            sheetBehavior.setPeekHeight(0);
-        else sheetBehavior.setPeekHeight(280);*/
 
-        ListView lVPOI;
-        lVPOI = (ListView) findViewById(R.id.lVPOI);
-        poiAdapter = new POIAdapter(getApplicationContext(), (ArrayList) displayBucketList);
-        lVPOI.setAdapter(poiAdapter);
+        if (maneuver.contains("TURN_LEFT"))
+            iVInstruction.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.nav_arrow_left));
+        else if (maneuver.contains("TURN_RIGHT"))
+            iVInstruction.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.nav_arrow_right));
+        else if (maneuver.contains("ARRIVE") || maneuver.contains("DEPART") || maneuver.contains("KEEP"))
+            iVInstruction.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.nav_arrow_up));
+        else if (maneuver.contains("MAKE_UTURN"))
+            iVInstruction.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.nav_arrow_down));
 
-        if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
-            sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        } else {
-            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        }
 
     }
 
