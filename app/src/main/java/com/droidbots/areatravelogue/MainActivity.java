@@ -249,15 +249,49 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             CameraViewActivity.assignedGuide.setName("Aditya Walke");
             CameraViewActivity.assignedGuide.setContact(987654);
             CameraViewActivity.assignedGuide.setRating(4);
+            CameraViewActivity.assignedGuide.setLat("18.561705");
+            CameraViewActivity.assignedGuide.setLng("73.913336");
 
             //TODO END HERE
 
 
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            String guideDetails = "Name : "+CameraViewActivity.assignedGuide.getName()+"\n"+"Phone : "+CameraViewActivity.assignedGuide.getContact()+"\nRating : "+CameraViewActivity.assignedGuide.getRating();
             builder.setTitle("Your Guide Details")
-                    .setMessage("Name : "+CameraViewActivity.assignedGuide.getName()+"\n"+"Phone : "+CameraViewActivity.assignedGuide.getContact()+"\nRating : "+CameraViewActivity.assignedGuide.getRating());
+                    .setMessage(guideDetails);
             AlertDialog dialog = builder.create();
             dialog.show();
+
+            startCord = new LatLng(Double.parseDouble(CameraViewActivity.assignedGuide.getLat()),Double.parseDouble(CameraViewActivity.assignedGuide.getLng()));
+            endCord = new LatLng(lat,longi);
+
+            SimpleMarkerBalloon balloon = new SimpleMarkerBalloon(guideDetails);
+            MarkerBuilder markerBuilder = new MarkerBuilder(startCord).markerBalloon(balloon);
+            tomtomMap.addMarker(markerBuilder);
+            RouteQuery queryBuilder = RouteQueryBuilder.create(startCord, endCord)
+                    .withMaxAlternatives(0)
+                    .withReport(Report.EFFECTIVE_SETTINGS)
+                    .withInstructionsType(InstructionsType.TEXT)
+                    .withTravelMode(TravelMode.CAR)
+                    .withConsiderTraffic(true).build();
+
+
+            routePlannerAPI.planRoute(queryBuilder)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new DisposableSingleObserver<RouteResponse>() {
+                        @Override
+                        public void onSuccess(RouteResponse routeResult) {
+                            currentRoute = routeResult.getRoutes();
+                            displayRoutes(routeResult.getRoutes());
+                            tomtomMap.setMyLocationEnabled(true);
+                            tomtomMap.displayRoutesOverview();
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                        }
+                    });
 
         }
     }
