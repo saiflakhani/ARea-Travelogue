@@ -18,6 +18,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -57,9 +58,12 @@ public static List<Store> storeList = new ArrayList<>();
     private MyCurrentAzimuth myCurrentAzimuth;
     Instruction[] instructions = null;
     int instructionCount = 0;
-    LinearLayout lLInstructions, lLPois;
+    LinearLayout lLPois;
+    RelativeLayout lLInstructions;
     ImageView iVInstruction;
+    TextView tVNextMove, tVNextMoveDist;
     Button btnPrevInstruction, btnNextInstruction;
+    int prevDist = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -124,17 +128,33 @@ public static List<Store> storeList = new ArrayList<>();
         lLInstructions = findViewById(R.id.lLInstruction);
         lLPois = findViewById(R.id.lLPois);
 
-
+        tVNextMove = findViewById(R.id.tVNextMove);
+        tVNextMoveDist = findViewById(R.id.tVNextMoveDist);
 
 
         if(MainActivity.currentRoute != null) {
             List<FullRoute> route = MainActivity.currentRoute;
             instructions = route.get(0).getGuidance().getInstructions();
-//            lLInstructions.setVisibility(View.VISIBLE);
-//            lLPois.setVisibility(View.GONE);
+            lLInstructions.setVisibility(View.VISIBLE);
+            lLPois.setVisibility(View.GONE);
+            String maneuver = "";
+            if (instructionCount < instructions.length)
+                tVNextMove.setText(instructions[instructionCount].getMessage());
+                tVNextMoveDist.setText("Now");
+                prevDist = instructions[instructionCount].getRouteOffsetInMeters();
+                maneuver = instructions[instructionCount].getManeuver();
+            if (maneuver.contains("TURN_LEFT"))
+                iVInstruction.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.nav_arrow_left));
+            else if (maneuver.contains("TURN_RIGHT"))
+                iVInstruction.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.nav_arrow_right));
+            else if (maneuver.contains("ARRIVE") || maneuver.contains("DEPART") || maneuver.contains("KEEP"))
+                iVInstruction.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.nav_arrow_up));
+            else if (maneuver.contains("MAKE_UTURN"))
+                iVInstruction.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.nav_arrow_down));
+
         } else {
-//            lLInstructions.setVisibility(View.GONE);
-//            lLPois.setVisibility(View.VISIBLE);
+            lLInstructions.setVisibility(View.GONE);
+            lLPois.setVisibility(View.VISIBLE);
             instructions = null;
         }
 
@@ -270,13 +290,13 @@ public static List<Store> storeList = new ArrayList<>();
                 int s;
                 if ((s = bucketListLeft.size()) > 0) {
                     btnLeft.setVisibility(View.VISIBLE);
-                    tVLeft.setText(bucketListLeft.get(0).getPoiName() + " + " + (s - 1) + " others");
+                    tVLeft.setText(bucketListLeft.get(0).getPoiName() + " + " + (s - 1) + " others\nIn " + String.format("%.1f",bucketListLeft.get(0).getDistance()) + "m");
                 } else if ((s = bucketListCenter.size()) > 0) {
                     btnCenter.setVisibility(View.VISIBLE);
-                    tVCenter.setText(bucketListCenter.get(0).getPoiName() + " + " + (s - 1) + " others");
+                    tVCenter.setText(bucketListCenter.get(0).getPoiName() + " + " + (s - 1) + " others\nIn " + String.format("%.1f",bucketListCenter.get(0).getDistance()) + "m");
                 } else if ((s = bucketListRight.size()) > 0) {
                     btnRight.setVisibility(View.VISIBLE);
-                    tVRight.setText(bucketListRight.get(0).getPoiName() + " + " + (s - 1) + " others");
+                    tVRight.setText(bucketListRight.get(0).getPoiName() + " + " + (s - 1) + " others\nIn " + String.format("%.1f",bucketListRight.get(0).getDistance()) + "m");
                 } /*else if(toLeft > 0) tVToLeft.setText(toLeft + "");
 				else if(toRight > 0) tVToRight.setText(toRight + "");
 */
@@ -428,12 +448,21 @@ public static List<Store> storeList = new ArrayList<>();
                 }
                 break;
             case R.id.getNextInstruction:
-                if (instructionCount < instructions.length)
-                    maneuver = instructions[instructionCount++].getManeuver();
+                if (instructionCount < instructions.length - 1) {
+                    tVNextMove.setText(instructions[++instructionCount].getMessage());
+                    tVNextMoveDist.setText("In " + (instructions[instructionCount].getRouteOffsetInMeters() - prevDist) + "m");
+                    prevDist = instructions[instructionCount].getRouteOffsetInMeters();
+                    maneuver = instructions[instructionCount].getManeuver();
+                }
                 break;
             case R.id.getPrevInstruction:
-                if (instructionCount >= 1)
-                    maneuver = instructions[--instructionCount].getManeuver();
+                if (instructionCount >= 2) {
+                    --instructionCount;
+                    tVNextMove.setText(instructions[instructionCount].getMessage());
+                    tVNextMoveDist.setText("In " + (prevDist - instructions[instructionCount-1].getRouteOffsetInMeters()) + "m");
+                    prevDist = instructions[instructionCount-1].getRouteOffsetInMeters();
+                    maneuver = instructions[instructionCount].getManeuver();
+                }
                 break;
         }
 

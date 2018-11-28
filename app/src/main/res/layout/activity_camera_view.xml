@@ -23,36 +23,6 @@
             android:text="AR Mode" />
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:id="@+id/lLInstruction"
-            android:weightSum="3"
-            android:orientation="horizontal">
-
-            <Button
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Prev Instruction"
-                android:id="@+id/getPrevInstruction"/>
-
-
-            <ImageView
-                android:layout_weight="1"
-                android:id="@+id/iVInstruction"
-                android:layout_width="0dp"
-                android:layout_height="40dp" />
-
-            <Button
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Next Instruction"
-                android:id="@+id/getNextInstruction"/>
-
-        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/lLPois"
@@ -72,6 +42,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
+                    android:gravity="center"
                     android:textColor="@android:color/white"
                     android:textSize="18sp" />
 
@@ -135,6 +106,7 @@
                         android:id="@+id/tVLeft"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:gravity="center"
                         android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
@@ -156,6 +128,7 @@
 
                     <TextView
                         android:id="@+id/tVRight"
+                        android:gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@android:color/white"
@@ -166,6 +139,76 @@
             </RelativeLayout>
 
         </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#800080"
+            android:elevation="25dp"
+            android:padding="5dp"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/lLInstruction">
+
+            <Button
+                android:layout_centerVertical="true"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/arrow_left"
+                android:layout_alignParentStart="true"
+                android:id="@+id/getPrevInstruction"/>
+
+
+            <ImageView
+                android:id="@+id/iVInstruction"
+                android:layout_width="60dp"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/getPrevInstruction"
+                android:layout_height="60dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:orientation="vertical"
+                android:layout_marginStart="10dp"
+                android:id="@+id/lLDirections"
+                android:layout_toStartOf="@id/getNextInstruction"
+                android:layout_toEndOf="@id/iVInstruction">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:text="Next Movement"
+                    android:textSize="22sp"
+                    android:id="@+id/tVNextMove"/>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:text="In 500 m"
+                    android:textSize="16sp"
+                    android:id="@+id/tVNextMoveDist"/>
+
+
+            </LinearLayout>
+
+
+            <Button
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="5dp"
+                android:background="@drawable/arrow_right"
+                android:id="@+id/getNextInstruction"/>
+
+        </RelativeLayout>
+
 
         <TextView
             android:id="@+id/cameraTextView"
