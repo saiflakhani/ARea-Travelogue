@@ -8,7 +8,7 @@
             android:title="Maps and AR" />
         <item
             android:id="@+id/nav_book_tour_guide"
-            android:icon="@drawable/ic_launcher"
+            android:icon="@drawable/guide"
             android:title="Book a tour guide!" />
     </group>
 

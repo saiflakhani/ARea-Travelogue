@@ -1,20 +1,28 @@
 package com.droidbots.areatravelogue.deals;
 
 public class Guide {
-    private String name;
-    private int contact, id, rating;
+    private String name,contact;
+    private int  id, rating;
     private String lat, lng, imgUrl;
 
     public Guide() {
     }
 
-    public Guide(int id, String name, int contact, String imgUrl, int rating, String lat, String lng) {
+    public Guide(int id, String name, String contact, String imgUrl, int rating, String lat, String lng) {
         this.name = name;
         this.contact = contact;
         this.id = id;
         this.lat = lat;
         this.lng = lng;
         this.imgUrl = imgUrl;
+        this.rating = rating;
+    }
+    public Guide(int id, String name, String contact, int rating, String lat, String lng) {
+        this.name = name;
+        this.contact = contact;
+        this.id = id;
+        this.lat = lat;
+        this.lng = lng;
         this.rating = rating;
     }
 
@@ -34,11 +42,11 @@ public class Guide {
         this.name = name;
     }
 
-    public int getContact() {
+    public String getContact() {
         return contact;
     }
 
-    public void setContact(int contact) {
+    public void setContact(String contact) {
         this.contact = contact;
     }
 

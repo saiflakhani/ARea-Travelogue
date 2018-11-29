@@ -3,10 +3,12 @@ package com.droidbots.areatravelogue;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
@@ -21,10 +23,12 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.droidbots.areatravelogue.deals.Deal;
+import com.droidbots.areatravelogue.deals.Guide;
 import com.droidbots.areatravelogue.deals.Review;
 import com.droidbots.areatravelogue.deals.Store;
 import com.droidbots.areatravelogue.interfaces.NearbyInterface;
@@ -83,6 +87,8 @@ import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static java.lang.Thread.sleep;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback,
 
@@ -236,67 +242,109 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onResume() {
         super.onResume();
         ARMode.setChecked(false);
-        checkIfTourBooked();
+        if(FindTourGuides.isTourBooked)showLoadingScreen();
     }
 
     private void checkIfTourBooked() {
-        if(FindTourGuides.isTourBooked){
-            tomtomMap.clear();
-            tomtomMap.setMyLocationEnabled(true);
+        if(FindTourGuides.isTourBooked) {
 
-            //TODO SABARINATH GET THESE VALUES FROM FIREBASE
+                TextView tVCancelTour = findViewById(R.id.tVCancelTour);
+                tVCancelTour.setVisibility(View.VISIBLE);
+                tVCancelTour.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        tomtomMap.clear();
+                        tomtomMap.setMyLocationEnabled(true);
+                        FindTourGuides.isTourBooked = false;
+                        tVCancelTour.setVisibility(View.GONE);
+                        AlertDialog.Builder b = new AlertDialog.Builder(MainActivity.this).setTitle("Your tour was cancelled").setMessage("You may be charged for your next cancellation");
+                        b.show();
+                    }
+                });
+                tomtomMap.clear();
+                tomtomMap.setMyLocationEnabled(true);
 
-            CameraViewActivity.assignedGuide.setName("Aditya Walke");
-            CameraViewActivity.assignedGuide.setContact(987654);
-            CameraViewActivity.assignedGuide.setRating(4);
-            CameraViewActivity.assignedGuide.setLat("18.561705");
-            CameraViewActivity.assignedGuide.setLng("73.913336");
+                //TODO SABARINATH GET THESE VALUES FROM FIREBASE
 
-            //TODO END HERE
+                CameraViewActivity.assignedGuide.setName("Sabarinath S.");
+                CameraViewActivity.assignedGuide.setContact("+91 9405296837");
+                CameraViewActivity.assignedGuide.setRating(5);
+                CameraViewActivity.assignedGuide.setLat("18.561705");
+                CameraViewActivity.assignedGuide.setLng("73.913336");
 
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-            String guideDetails = "Name : "+CameraViewActivity.assignedGuide.getName()+"\n"+"Phone : "+CameraViewActivity.assignedGuide.getContact()+"\nRating : "+CameraViewActivity.assignedGuide.getRating();
-            builder.setTitle("Your Guide Details")
-                    .setMessage(guideDetails);
-            AlertDialog dialog = builder.create();
-            dialog.show();
-
-            startCord = new LatLng(Double.parseDouble(CameraViewActivity.assignedGuide.getLat()),Double.parseDouble(CameraViewActivity.assignedGuide.getLng()));
-            endCord = new LatLng(lat,longi);
-
-            SimpleMarkerBalloon balloon = new SimpleMarkerBalloon(guideDetails);
-            MarkerBuilder markerBuilder = new MarkerBuilder(startCord).markerBalloon(balloon);
-            tomtomMap.addMarker(markerBuilder);
-            RouteQuery queryBuilder = RouteQueryBuilder.create(startCord, endCord)
-                    .withMaxAlternatives(0)
-                    .withReport(Report.EFFECTIVE_SETTINGS)
-                    .withInstructionsType(InstructionsType.TEXT)
-                    .withTravelMode(TravelMode.CAR)
-                    .withConsiderTraffic(true).build();
+                //TODO END HERE
 
 
-            routePlannerAPI.planRoute(queryBuilder)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new DisposableSingleObserver<RouteResponse>() {
-                        @Override
-                        public void onSuccess(RouteResponse routeResult) {
-                            currentRoute = routeResult.getRoutes();
-                            displayRoutes(routeResult.getRoutes());
-                            tomtomMap.setMyLocationEnabled(true);
-                            tomtomMap.displayRoutesOverview();
-                        }
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                String guideDetails = "Name : " + CameraViewActivity.assignedGuide.getName() + "\n" + "Phone : " + CameraViewActivity.assignedGuide.getContact() + "\nRating : " + CameraViewActivity.assignedGuide.getRating();
+                builder.setTitle("Your Guide Details")
+                        .setMessage(guideDetails);
+                AlertDialog dialog = builder.create();
+                dialog.show();
 
-                        @Override
-                        public void onError(Throwable e) {
-                        }
-                    });
+                ArrayList<Guide> otherGuides = new ArrayList<>();
+                Guide saifGuide = new Guide(1, "Saif Lakhani", "+91 8975959200", 5, "18.550296", "73.900993");
+                otherGuides.add(saifGuide);
+                Guide shivomGuide = new Guide(1, "Shivom Thakkar", "+91 7798738489", 5, "18.568624", "73.911615");
+                otherGuides.add(shivomGuide);
+                for (Guide g : otherGuides) {
+                    String guideDetailsString = "Name : " + g.getName() + "\n" + "Phone : " + g.getContact() + "\nRating : " + g.getRating();
+                    SimpleMarkerBalloon balloon = new SimpleMarkerBalloon(guideDetailsString);
+                    LatLng latLng = new LatLng(Double.parseDouble(g.getLat()), Double.parseDouble(g.getLng()));
+                    MarkerBuilder markerBuilder = new MarkerBuilder(latLng).markerBalloon(balloon).icon(Icon.Factory.fromResources(MainActivity.this, R.drawable.guide));
+                    ;
+                    tomtomMap.addMarker(markerBuilder);
+                }
 
-        }
+
+                startCord = new LatLng(Double.parseDouble(CameraViewActivity.assignedGuide.getLat()), Double.parseDouble(CameraViewActivity.assignedGuide.getLng()));
+                endCord = new LatLng(lat, longi);
+
+                SimpleMarkerBalloon balloon = new SimpleMarkerBalloon(guideDetails);
+                MarkerBuilder markerBuilder = new MarkerBuilder(startCord).markerBalloon(balloon).icon(Icon.Factory.fromResources(MainActivity.this, R.drawable.guide));
+                tomtomMap.addMarker(markerBuilder);
+                RouteQuery queryBuilder = RouteQueryBuilder.create(startCord, endCord)
+                        .withMaxAlternatives(0)
+                        .withReport(Report.EFFECTIVE_SETTINGS)
+                        .withInstructionsType(InstructionsType.TEXT)
+                        .withTravelMode(TravelMode.PEDESTRIAN)
+                        .withConsiderTraffic(true).build();
+
+
+                routePlannerAPI.planRoute(queryBuilder)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new DisposableSingleObserver<RouteResponse>() {
+                            @Override
+                            public void onSuccess(RouteResponse routeResult) {
+                                //routeResult.getRoutes().get(0).getSummary().getTravelTimeInSeconds();
+                                currentRoute = routeResult.getRoutes();
+                                displayRoutes(routeResult.getRoutes());
+                                tomtomMap.setMyLocationEnabled(true);
+                                tomtomMap.displayRoutesOverview();
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                            }
+                        });
+
+            }
     }
 
+    private void showLoadingScreen() {
+        ProgressDialog dialog = new ProgressDialog(MainActivity.this);
+        dialog.setMessage("Looking for your tour guide..");
+        dialog.show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                dialog.dismiss();
+                checkIfTourBooked();
+            }
+        },3000);
 
+    }
 
 
     private void setPoints() {
@@ -447,7 +495,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     .withMaxAlternatives(0)
                     .withReport(Report.EFFECTIVE_SETTINGS)
                     .withInstructionsType(InstructionsType.TEXT)
-                    .withTravelMode(TravelMode.CAR)
+                    .withTravelMode(TravelMode.PEDESTRIAN)
                     .withConsiderTraffic(true).build();
 
 

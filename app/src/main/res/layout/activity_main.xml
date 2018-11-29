@@ -81,6 +81,18 @@
         app:itemTextColor="@android:color/darker_gray"
         app:menu="@menu/drawer_view"/>
 
+    <TextView
+        android:id="@+id/tVCancelTour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/navigationView"
+        android:layout_alignEnd="@+id/ARSwitch"
+        android:text="Cancel Tour"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:textColor="@android:color/holo_red_dark"
+        tools:textColor="@android:color/holo_red_dark" />
 
 
 </RelativeLayout>

@@ -26,8 +26,10 @@
 
         <activity
             android:name=".CameraViewActivity"
-            android:label="@string/title_activity_camera_view" />
-        <activity android:name=".Splash">
+            android:label="@string/title_activity_camera_view"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Splash"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
@@ -35,12 +37,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
-        <activity android:name=".PopUpActivity" />
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".PopUpActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".StoreDetailsActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light" />
-        <activity android:name=".FindTourGuides"></activity>
+        <activity android:name=".FindTourGuides"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
